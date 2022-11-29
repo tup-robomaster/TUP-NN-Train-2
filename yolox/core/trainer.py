@@ -99,23 +99,23 @@ class Trainer:
         #images,
         inps, targets = self.prefetcher.next()
         inps = inps.to(self.data_type)
-        # print(targets)
         targets = targets.to(self.data_type)
         targets.requires_grad = False
         inps, targets = self.exp.preprocess(inps, targets, self.input_size)
         data_end_time = time.time()
 
+        # from yolox.data.datasets.coco_classes import COCO_CLASSES
         # src = np.array(inps[0].cpu(),dtype=np.uint8)
         # src = src.transpose((1,2,0))
         # targets1=np.array(targets[0].cpu(),dtype=np.int16)
         # src = src.copy()
         # for target in targets1:
         #     # print(target)
-        #     cv2.putText(src,str(target[0] + target[1] * 8),tuple(np.array(target[2:4])),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
-        #     cv2.line(src, tuple(np.array(target[2:4])), tuple(np.array(target[4:6])), (0,255,0), 1)
-        #     cv2.line(src, tuple(np.array(target[4:6])), tuple(np.array(target[6:8])), (0,255,0),1)
-        #     cv2.line(src, tuple(np.array(target[6:8])), tuple(np.array(target[8:10])), (0,255,0),1)
-        #     cv2.line(src, tuple(np.array(target[8:10])), tuple(np.array(target[2:4])), (0,255,0),1)
+        #     cv2.putText(src,str(COCO_CLASSES[target[0]]),tuple(np.array(target[1:3])),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
+        #     cv2.line(src, tuple(np.array(target[1:3])), tuple(np.array(target[3:5])), (0,255,0), 1)
+        #     cv2.line(src, tuple(np.array(target[3:5])), tuple(np.array(target[5:7])), (0,255,0),1)
+        #     cv2.line(src, tuple(np.array(target[5:7])), tuple(np.array(target[7:9])), (0,255,0),1)
+        #     cv2.line(src, tuple(np.array(target[7:9])), tuple(np.array(target[1:3])), (0,255,0),1)
         # cv2.imshow("inps",src)
         # cv2.waitKey(0)
 

@@ -136,7 +136,7 @@ def random_perspective(
     height = img.shape[0] + border[0] * 2  # shape(h,w,c)
     width = img.shape[1] + border[1] * 2
 
-    i = is_outrange(img=img, box=targets[:, :-2])
+    i = is_outrange(img=img, box=targets[:, :-1])
     targets = targets[i]
 
     # Center
@@ -187,10 +187,10 @@ def random_perspective(
     # Transform label coordinates
     n = len(targets)
     if n:
-        apexes = int((targets.shape[1] - 2) / 2)
+        apexes = int((targets.shape[1] - 1) / 2)
         # warp points
         xy = np.ones((n * apexes, 3))
-        xy[:, :2] = targets[:, :-2].reshape(
+        xy[:, :2] = targets[:, :-1].reshape(
             n * apexes, 2
         )  # x1y1, x2y2, x3y3 ..., xnyn
         xy = xy @ M.T  # transform
@@ -199,15 +199,15 @@ def random_perspective(
         else:  # affine
             xy = xy[:, :2].reshape(n, apexes * 2)
 
-        # # # clip boxes
+        # clip boxes
         # xy[:, ::2] = xy[:, ::2].clip(0, width)
         # xy[:, 1::2] = xy[:, 1::2].clip(0, height)
 
         # filter candidates
-        i = box_candidates(box1=targets[:, :-2], box2=xy)
+        i = box_candidates(box1=targets[:, :-1], box2=xy)
         targets = targets[i]
-        targets[:, :-2] = xy[i]
-        j = is_outrange(img=img, box=targets[:, :-2])
+        targets[:, :-1] = xy[i]
+        j = is_outrange(img=img, box=targets[:, :-1])
         targets = targets[j]
 
     return img, targets
@@ -258,7 +258,7 @@ class TrainTransform:
         labels = targets[:, self.num_apexes * 2:].copy()
         if len(boxes) == 0:
             # targets = np.zeros((self.max_labels, 5), dtype=np.float32)
-            targets = np.zeros((self.max_labels, self.num_apexes * 2 + 2), dtype=np.float32)
+            targets = np.zeros((self.max_labels, self.num_apexes * 2 + 1), dtype=np.float32)
             image, r_o = preproc(image, input_dim)
             return image, targets
 
@@ -296,8 +296,7 @@ class TrainTransform:
         # labels_t = np.expand_dims(labels_t, 1)
         # print()
         targets_t = np.hstack((labels_t, boxes_t))
-        # padded_labels = np.zeros((self.max_labels, 5))
-        padded_labels = np.zeros((self.max_labels, self.num_apexes * 2 + 2))
+        padded_labels = np.zeros((self.max_labels, self.num_apexes * 2 + 1))
         padded_labels[range(len(targets_t))[:self.max_labels]] = targets_t[:self.max_labels]
         padded_labels = np.ascontiguousarray(padded_labels, dtype=np.float32)
         return image_t, padded_labels

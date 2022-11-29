@@ -113,9 +113,9 @@ class MosaicDetection(Dataset):
                 labels = _labels.copy()
                 if _labels.size > 0:
                     # print(scale)
-                    labels[:, 0:-2] = scale * _labels[:, 0:-2]
-                    labels[:, :-2:2] += padw
-                    labels[:, 1:-2:2] += padh
+                    labels[:, 0:-1] = scale * _labels[:, 0:-1]
+                    labels[:, :-1:2] += padw
+                    labels[:, 1:-1:2] += padh
                 mosaic_labels.append(labels)
             #Clip the value of label.
             # print(mosaic_labels[0].shape)
@@ -134,14 +134,15 @@ class MosaicDetection(Dataset):
                 border=[-input_h // 2, -input_w // 2],
             )  # border to remove
             # src = np.array(mosaic_img,dtype=np.int8)
+            # # src = src.transpose((1,2,0))
             # targets=np.array((mosaic_labels),dtype=np.int16)
             # for target in targets:
             #     cv2.line(src, tuple(np.array(target[0:2])), tuple(np.array(target[2:4])), (0,0,255))
             #     cv2.line(src, tuple(np.array(target[2:4])), tuple(np.array(target[4:6])), (0,0,255))
             #     cv2.line(src, tuple(np.array(target[4:6])), tuple(np.array(target[6:8])), (0,0,255))
             #     cv2.line(src, tuple(np.array(target[6:8])), tuple(np.array(target[0:2])), (0,0,255))
-            # cv2.imshow("inps",src)
-            # cv2.waitKey(0)
+            # cv2.imshow("xxx",src)
+            # cv2.waitKey(100)
 
             # -----------------------------------------------------------------
             # CopyPaste: https://arxiv.org/abs/2012.07177

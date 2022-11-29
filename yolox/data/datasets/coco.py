@@ -147,7 +147,7 @@ class COCODataset(Dataset):
             objs.append(obj)
 
         num_objs = len(objs)
-        res = np.zeros((num_objs, self.num_apexes * 2 + 2))
+        res = np.zeros((num_objs, self.num_apexes * 2 + 1))
 
         # for ix, obj in enumerate(objs):
         #     cls = self.class_ids.index(obj["category_id"])
@@ -157,57 +157,10 @@ class COCODataset(Dataset):
         for ix, obj in enumerate(objs):
             cls = self.class_ids.index(obj["category_id"])
             res[ix, :self.num_apexes * 2] = np.ravel(obj["segmentation"])   #Apex
-            res[ix, self.num_apexes * 2] = cls % self.num_classes           #Class
-            res[ix, self.num_apexes * 2 + 1] = cls // self.num_classes      #Color
+            res[ix, self.num_apexes * 2] = cls                              #Class
         #Normalize label 
         r = min(self.img_size[0] / height, self.img_size[1] / width)
         res[:, :self.num_apexes * 2] *= r
-        
-        ##---Deprecated---------------------
-        # if type == "Train":
-        #     for obj in annotations:
-        #         obj["segmentation"] = np.ravel(obj["segmentation"])
-        #         objs.append(obj)
-
-        #     num_objs = len(objs)
-        #     res = np.zeros((num_objs, self.num_apexes * 2 + 2))
-
-        #     # for ix, obj in enumerate(objs):
-        #     #     cls = self.class_ids.index(obj["category_id"])
-        #     #     print(res[ix])
-        #     #     res[ix, 0:4] = obj["clean_bbox"]
-        #     # #     res[ix, 4] = cls
-        #     for ix, obj in enumerate(objs):
-        #         cls = self.class_ids.index(obj["category_id"])
-        #         res[ix, :self.num_apexes * 2] = np.ravel(obj["segmentation"])   #Apex
-        #         res[ix, self.num_apexes * 2] = cls % self.num_classes           #Class
-        #         res[ix, self.num_apexes * 2 + 1] = cls // self.num_classes      #Color
-        #     #Normalize label 
-        #     r = min(self.img_size[0] / height, self.img_size[1] / width)
-        #     res[:, :self.num_apexes * 2] *= r
-        # else:
-        #     #TODO:Not for Training ,Need to be modified if more functions is needed.
-        #     for obj in annotations:
-        #         x1 = np.max((0, obj["bbox"][0]))
-        #         y1 = np.max((0, obj["bbox"][1]))
-        #         x2 = np.min((width, x1 + np.max((0, obj["bbox"][2]))))
-        #         y2 = np.min((height, y1 + np.max((0, obj["bbox"][3]))))
-        #         if obj["area"] > 0 and x2 >= x1 and y2 >= y1:
-        #             obj["clean_bbox"] = [x1, y1, x2, y2]
-        #             objs.append(obj)
-
-        #     num_objs = len(objs)
-
-        #     res = np.zeros((num_objs, 5))
-
-        #     for ix, obj in enumerate(objs):
-        #         cls = self.class_ids.index(obj["category_id"])
-        #         res[ix, 0:4] = obj["clean_bbox"]
-        #         res[ix, 4] = cls
-
-        #     r = min(self.img_size[0] / height, self.img_size[1] / width)
-        #     res[:, 0:4] *= r
-        ##---Deprecated---------------------
         img_info = (height, width)
         resized_info = (int(height * r), int(width * r))
 

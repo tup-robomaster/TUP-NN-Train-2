@@ -417,7 +417,7 @@ class YOLOXHead(nn.Module):
 
         num_fg = 0.0
         num_gts = 0.0
-        #Label format:[Class,Color,Reg]
+        #Label format:[Class, Reg]
         #Travel all labels for all batches
         for batch_idx in range(outputs.shape[0]):
             num_gt = int(nlabel[batch_idx])
@@ -430,10 +430,10 @@ class YOLOXHead(nn.Module):
                 obj_target = outputs.new_zeros((total_num_anchors, 1))
                 fg_mask = outputs.new_zeros(total_num_anchors).bool()
             else:
-                gt_bboxes_per_image = labels[batch_idx, :num_gt, 2:2 + self.num_apexes * 2]
+                gt_bboxes_per_image = labels[batch_idx, :num_gt, 1:]
                 #Get ground true classes and color
-                gt_classes = labels[batch_idx, :num_gt, 0]
-                gt_colors = labels[batch_idx, :num_gt, 1]
+                gt_classes = labels[batch_idx, :num_gt,0] % self.num_classes
+                gt_colors = labels[batch_idx, :num_gt,0] // self.num_classes
                 #Get all bbox preds
                 bboxes_preds_per_image = bbox_preds[batch_idx]
                 #Generate rect bbox for apexs
@@ -447,11 +447,11 @@ class YOLOXHead(nn.Module):
                     matched_gt_inds,
                     num_fg_img,
                 ) = self.get_assignments(
-                    batch_idx,              #Batch
-                    num_gt,                 #Number of ground true
-                    total_num_anchors,      #Total number of anchors
-                    gt_rect_bboxes_per_image,    #Ground True classes per image
-                    gt_classes,             #Ground True classes
+                    batch_idx,                      #Batch
+                    num_gt,                         #Number of ground true
+                    total_num_anchors,              #Total number of anchors
+                    gt_rect_bboxes_per_image,       #Ground True classes per image
+                    gt_classes,                     #Ground True classes
                     gt_colors,
                     rect_bboxes_preds_per_image,
                     expanded_strides,

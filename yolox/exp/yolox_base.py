@@ -24,11 +24,11 @@ class Exp(BaseExp):
         self.num_apexes = 4
         self.depth = 1.00
         self.width = 1.00
-        self.act = 'hswish'
+        self.act = 'relu'
 
         # ---------------- dataloader config ---------------- #
         # set worker to 4 for shorter dataloader init time
-        self.data_num_workers = 8
+        self.data_num_workers = 1
         self.input_size = (416,416)  # (height, width)
         # Actual multiscale ranges: [640-5*32, 640+5*32].
         # To disable multiscale training, set the
@@ -55,7 +55,7 @@ class Exp(BaseExp):
         #Flip 
         self.flip_prob = 0.0
         #Affine
-        self.degrees = 20.0
+        self.degrees = 10.0
         self.translate = 1.0
         self.shear = 1.0
         self.perspective = 1.0
@@ -76,7 +76,7 @@ class Exp(BaseExp):
         self.momentum = 0.9
 
         self.print_interval = 10
-        self.eval_interval = 1
+        self.eval_interval = 5
         self.per_class_AP = True
         self.per_class_AR = True
         self.save_history_ckpt = False
@@ -144,7 +144,6 @@ class Exp(BaseExp):
                     noise_prob=self.noise_prob),
                 cache=cache_img,
             )
-        #TODO:Fix Mosaic Data Augmentation
         dataset = MosaicDetection(
             dataset,
             mosaic=not no_aug,
@@ -219,8 +218,8 @@ class Exp(BaseExp):
             inputs = nn.functional.interpolate(
                 inputs, size=tsize, mode="bilinear", align_corners=False
             )
-            targets[..., 2::2] = targets[..., 2::2] * scale_x
-            targets[..., 3::2] = targets[..., 3::2] * scale_y
+            targets[..., 1::2] = targets[..., 1::2] * scale_x
+            targets[..., 2::2] = targets[..., 2::2] * scale_y
         return inputs, targets
 
     def get_optimizer(self, batch_size):

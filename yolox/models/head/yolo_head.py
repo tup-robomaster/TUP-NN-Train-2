@@ -49,7 +49,6 @@ class YOLOXHead(nn.Module):
         self.cls_convs = nn.ModuleList()
         self.reg_convs = nn.ModuleList()
         self.cls_preds = nn.ModuleList()
-        self.color_preds = nn.ModuleList()
         self.reg_preds = nn.ModuleList()
         self.obj_preds = nn.ModuleList()
         self.in_channels = in_channels
@@ -113,17 +112,7 @@ class YOLOXHead(nn.Module):
             self.cls_preds.append(
                 nn.Conv2d(
                     in_channels=int(256 * width),
-                    out_channels=self.n_anchors * self.num_classes,
-                    kernel_size=1,
-                    stride=1,
-                    padding=0,
-                )
-            )
-            #Building Color Predict Layer
-            self.color_preds.append(
-                nn.Conv2d(
-                    in_channels=int(256 * width),
-                    out_channels=self.n_anchors * self.num_colors,
+                    out_channels=self.n_anchors * (self.num_classes + self.num_colors),
                     kernel_size=1,
                     stride=1,
                     padding=0,
@@ -171,11 +160,6 @@ class YOLOXHead(nn.Module):
             b.data.fill_(-math.log((1 - prior_prob) / prior_prob))
             conv.bias = torch.nn.Parameter(b.view(-1), requires_grad=True)
 
-        for conv in self.color_preds:
-            b = conv.bias.view(self.n_anchors, -1)
-            b.data.fill_(-math.log((1 - prior_prob) / prior_prob))
-            conv.bias = torch.nn.Parameter(b.view(-1), requires_grad=True)
-
         for conv in self.obj_preds:
             b = conv.bias.view(self.n_anchors, -1)
             b.data.fill_(-math.log((1 - prior_prob) / prior_prob))
@@ -195,14 +179,13 @@ class YOLOXHead(nn.Module):
             reg_x = x
             cls_feat = cls_conv(cls_x)
             cls_output = self.cls_preds[k](cls_feat)
-            color_output = self.color_preds[k](cls_feat)
             reg_feat = reg_conv(reg_x)
             reg_output = self.reg_preds[k](reg_feat)
             obj_output = self.obj_preds[k](reg_feat)
 
 
             if self.training:
-                output = torch.cat([reg_output, obj_output, color_output, cls_output], 1)
+                output = torch.cat([reg_output, obj_output, cls_output], 1)
                 output, grid = self.get_output_and_grid(
                     output, k, stride_this_level, xin[0].type()
                 )
@@ -226,7 +209,7 @@ class YOLOXHead(nn.Module):
 
             else:
                 output = torch.cat(
-                    [reg_output, obj_output.sigmoid(), color_output.sigmoid(), cls_output.sigmoid()], 1
+                    [reg_output, obj_output.sigmoid(), cls_output.sigmoid()], 1
                 )
 
             outputs.append(output)

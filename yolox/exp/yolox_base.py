@@ -24,11 +24,11 @@ class Exp(BaseExp):
         self.num_apexes = 4
         self.depth = 1.00
         self.width = 1.00
-        self.act = 'relu'
+        self.act = 'hswish'
 
         # ---------------- dataloader config ---------------- #
         # set worker to 4 for shorter dataloader init time
-        self.data_num_workers = 1
+        self.data_num_workers = 8
         self.input_size = (416,416)  # (height, width)
         # Actual multiscale ranges: [640-5*32, 640+5*32].
         # To disable multiscale training, set the

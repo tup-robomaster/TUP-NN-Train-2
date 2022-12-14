@@ -3,4 +3,5 @@
 # Copyright (c) 2014-2021 Megvii Inc. All rights reserved.
 
 from .yolo_pafpn import YOLOPAFPN
+from .cross_pafpn import CrossPAFPN
 from .shufflenetv2_pafpn import ShuffleNetV2PAFPN

@@ -84,7 +84,7 @@ class BaseConv(nn.Module):
 class DWConv(nn.Module):
     """Depthwise Conv + Conv"""
 
-    def __init__(self, in_channels, out_channels, ksize, stride=1, act="hswish",no_depth_act=True):
+    def __init__(self, in_channels, out_channels, ksize, stride=1, act="hswish",no_depth_act=True,pconv_groups=1):
         super().__init__()
         self.dconv = BaseConv(
             in_channels,
@@ -96,13 +96,12 @@ class DWConv(nn.Module):
             no_act = no_depth_act
         )
         self.pconv = BaseConv(
-            in_channels, out_channels, ksize=1, stride=1, groups=1, act=act
+            in_channels, out_channels, ksize=1, stride=1, groups=pconv_groups, act=act
         )
 
     def forward(self, x):
         x = self.dconv(x)
         return self.pconv(x)
-
 
 class Bottleneck(nn.Module):
     # Standard bottleneck

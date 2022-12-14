@@ -30,7 +30,7 @@ class Exp(MyExp):
         if "model" not in self.__dict__:
             from yolox.models import YOLOX
             from yolox.models.backbone.shufflenetv2 import ShuffleNetV2
-            from yolox.models.neck.yolo_pafpn import YOLOPAFPN
+            from yolox.models.neck.cross_pafpn import CrossPAFPN
             from yolox.models.head.yolo_head import YOLOXHead
             out_channels_backbone = [64,128,256]
             in_channels_head = [64, 128, 256]
@@ -38,7 +38,7 @@ class Exp(MyExp):
             # NANO model use depthwise = True, which is main difference.
             # backbone = ShuffleV2PAFPN(self.depth, self.width, in_channels=in_channels, depthwise=True, act=self.act)
             backbone = ShuffleNetV2(channels=out_channels_backbone, act=self.act)
-            neck = YOLOPAFPN(self.depth, self.width, in_features=in_features, depthwise=True, act=self.act)
+            neck = CrossPAFPN(self.depth, self.width, in_features=in_features, depthwise=True, act=self.act)
             head = YOLOXHead(self.num_apexes, self.num_classes, self.num_colors, self.width, in_channels=in_channels_head, depthwise=True, act=self.act)
             self.model = YOLOX(backbone, neck, head)
 

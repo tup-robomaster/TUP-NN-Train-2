@@ -10,6 +10,7 @@ COCO_CLASSES = (
 "B4",
 "B5",
 "BO",
+"BBs",
 "BB",
 "RG",
 "R1",
@@ -18,6 +19,7 @@ COCO_CLASSES = (
 "R4",
 "R5",
 "RO",
+"RBs",
 "RB",
 "NG",
 "N1",
@@ -26,6 +28,7 @@ COCO_CLASSES = (
 "N4",
 "N5",
 "NO",
+"NBs",
 "NB",
 "PG",
 "P1",
@@ -34,5 +37,6 @@ COCO_CLASSES = (
 "P4",
 "P5",
 "PO",
+"PBs",
 "PB"
 )

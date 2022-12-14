@@ -19,7 +19,7 @@ class Exp(BaseExp):
         self.use_distillation  = False
         self.teacher_pth = "/home/rangeronmars/AI/TUP-NN-Train/teacher/teacher.pth"
         # ---------------- model config ---------------- #
-        self.num_classes = 8
+        self.num_classes = 9
         self.num_colors = 4
         self.num_apexes = 4
         self.depth = 1.00

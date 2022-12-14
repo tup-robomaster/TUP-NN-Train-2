@@ -20,7 +20,7 @@ class ShuffleNetV2(nn.Module):
         # print(chann)
 
         self.stem_list = []
-        self.stem_list.append(BaseConv(3,16,ksize=6,stride=2))
+        self.stem_list.append(BaseConv(3,16,ksize=5,stride=2))
         self.stem = nn.Sequential(*self.stem_list)
         
         self.conv1 = DWConv(16, 32, ksize=3,stride=2,act=act)

@@ -18,7 +18,7 @@ class RepVGG16(nn.Module):
         self.out_features = out_features
         base_channels = channels
 
-        self.stage0_list = [RepBaseConv(3, 16, ksize=3, stride=1, act=act)]
+        self.stage0_list = [RepBaseConv(3, 16, ksize=3, stride=2, act=act)]
         self.stage0_list.append(RepBaseConv(16, 16, ksize=3, stride=1, act=act))
         self.stage0 = nn.Sequential(*self.stage0_list)
 

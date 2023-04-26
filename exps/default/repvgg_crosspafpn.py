@@ -34,7 +34,7 @@ class Exp(MyExp):
             in_features = ["stage2", "stage3", "stage4"]
             backbone = RepVGG16(channels=in_channels_head, act=self.act)
             neck = CrossPAFPN(self.depth, self.width, in_features=in_features, depthwise=False, act=self.act)
-            head = YOLOXHead(self.num_apexes, self.num_classes, self.num_colors, self.width, in_channels=in_channels_head, depthwise=False, act=self.act,ksize_head=3)
+            head = YOLOXHead(self.num_apexes, self.num_classes, self.num_colors, self.width, in_channels=in_channels_head, depthwise=False, act=self.act,ksize_head=5)
             self.model = YOLOX(backbone, neck, head)
 
         self.model.apply(init_yolo)

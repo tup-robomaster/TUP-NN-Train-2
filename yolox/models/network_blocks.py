@@ -396,6 +396,7 @@ class RepBaseConv(nn.Module):
                                       padding=padding, dilation=dilation, groups=groups, bias=True)
 
         else:
+            self.rbr_identity = nn.BatchNorm2d(num_features=in_channels) if out_channels == in_channels and stride == 1 else None
             self.rbr_dense = self.conv_bn(in_channels=in_channels, out_channels=out_channels, kernel_size=ksize, stride=stride, padding=padding, groups=groups)
             self.rbr_1x1 = self.conv_bn(in_channels=in_channels, out_channels=out_channels, kernel_size=1, stride=stride, padding=padding_11, groups=groups)
 
@@ -405,12 +406,21 @@ class RepBaseConv(nn.Module):
             if hasattr(self, 'rbr_reparam'):
                 return self.se(self.rbr_reparam(inputs))
             else:
-                return self.se(self.rbr_dense(inputs) + self.rbr_1x1(inputs))
+                if self.rbr_identity is None:
+                    id_out = 0
+                else:
+                    id_out = self.rbr_identity(inputs)
+                    
+                return self.se(self.rbr_dense(inputs) + self.rbr_1x1(inputs) + id_out)
         else:
             if hasattr(self, 'rbr_reparam'):
                 return self.act(self.se(self.rbr_reparam(inputs)))
             else:
-                return self.act(self.se(self.rbr_dense(inputs) + self.rbr_1x1(inputs)))
+                if self.rbr_identity is None:
+                    id_out = 0
+                else:
+                    id_out = self.rbr_identity(inputs)
+                return self.act(self.se(self.rbr_dense(inputs) + self.rbr_1x1(inputs) + id_out))
 
     def conv_bn(self,in_channels, out_channels, kernel_size, stride, padding, groups=1):
         result = nn.Sequential()
@@ -445,7 +455,8 @@ class RepBaseConv(nn.Module):
     def get_equivalent_kernel_bias(self):
         kernel3x3, bias3x3 = self._fuse_bn_tensor(self.rbr_dense)
         kernel1x1, bias1x1 = self._fuse_bn_tensor(self.rbr_1x1)
-        return kernel3x3 + self._pad_1x1_to_3x3_tensor(kernel1x1), bias3x3 + bias1x1
+        kernelid, biasid = self._fuse_bn_tensor(self.rbr_identity)
+        return kernel3x3 + self._pad_1x1_to_3x3_tensor(kernel1x1) + kernelid, bias3x3 + bias1x1 + biasid
 
     def _pad_1x1_to_3x3_tensor(self, kernel1x1):
         if kernel1x1 is None:

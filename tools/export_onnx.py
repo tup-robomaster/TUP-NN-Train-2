@@ -12,6 +12,7 @@ from torch import nn
 from yolox.exp import get_exp
 from yolox.models.network_blocks import SiLU
 from yolox.utils import replace_module
+from yolox.utils.model_utils import fuse_model
 
 
 def make_parser():
@@ -85,6 +86,7 @@ def main():
     model.head.decode_in_inference = args.decode
 
     logger.info("loading checkpoint done.")
+    model = fuse_model(model)
     dummy_input = torch.randn(args.batch_size, 3, exp.test_size[0], exp.test_size[1])
     torch.onnx._export(
         model,

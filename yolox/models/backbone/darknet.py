@@ -113,7 +113,7 @@ class CSPDarknet(nn.Module):
 
         # stem
         # self.stem = Focus(3, base_channels, ksize=3, depthwise=depthwise, act=act)
-        self.stem = BaseConv(3, base_channels, ksize=6, stride=2, act=act)
+        self.stem = BaseConv(3, base_channels, ksize=5, stride=2, act=act)
         # dark2
         self.dark2 = nn.Sequential(
             Conv(base_channels, base_channels * 2, 3, 2, act=act),

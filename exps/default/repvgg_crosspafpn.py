@@ -27,15 +27,14 @@ class Exp(MyExp):
                     m.momentum = 0.03
         if "model" not in self.__dict__:
             from yolox.models import YOLOX
-            from yolox.models.backbone.darknet import CSPDarknet
-            from yolox.models.neck.yolo_pafpn import YOLOPAFPN
+            from yolox.models.backbone.repvgg16 import RepVGG16
+            from yolox.models.neck.cross_pafpn import CrossPAFPN
             from yolox.models.head.yolo_head import YOLOXHead
-            in_channels = [256, 512, 1024]
-            in_channels_head = [256 * self.width, 512 * self.width, 1024 * self.width]
-            # NANO model use depthwise = True, which is main difference.
-            backbone = CSPDarknet(self.depth, self.width, depthwise=True, act=self.act)
-            neck = YOLOPAFPN(self.depth, self.width, in_channels=in_channels, depthwise=True, act=self.act)
-            head = YOLOXHead(self.num_apexes, self.num_classes, self.num_colors, self.width, in_channels=in_channels_head, depthwise=True, act=self.act)
+            in_channels_head = [64, 128, 256]
+            in_features = ["stage2", "stage3", "stage4"]
+            backbone = RepVGG16(channels=in_channels_head, act=self.act)
+            neck = CrossPAFPN(self.depth, self.width, in_features=in_features, depthwise=False, act=self.act)
+            head = YOLOXHead(self.num_apexes, self.num_classes, self.num_colors, self.width, in_channels=in_channels_head, depthwise=False, act=self.act,ksize_head=3)
             self.model = YOLOX(backbone, neck, head)
 
         self.model.apply(init_yolo)

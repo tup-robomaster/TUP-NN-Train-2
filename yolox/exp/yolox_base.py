@@ -24,7 +24,7 @@ class Exp(BaseExp):
         self.num_apexes = 4
         self.depth = 1.00
         self.width = 1.00
-        self.act = 'hswish'
+        self.act = 'relu'
 
         # ---------------- dataloader config ---------------- #
         # set worker to 4 for shorter dataloader init time
@@ -63,7 +63,7 @@ class Exp(BaseExp):
         # --------------  training config --------------------- #
         #For Using SGD+Momentum
         self.warmup_epochs = 20
-        self.max_epoch = 500
+        self.max_epoch = 200
         self.warmup_lr = 0
         self.basic_lr_per_img = 0.001
         self.scheduler = "yoloxwarmcos"

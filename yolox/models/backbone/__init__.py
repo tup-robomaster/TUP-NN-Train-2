@@ -4,3 +4,4 @@
 
 from .darknet import CSPDarknet, Darknet
 from .shufflenetv2 import ShuffleNetV2
+from .repvgg16 import RepVGG16

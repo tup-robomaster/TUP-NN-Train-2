@@ -20,7 +20,7 @@ from yolox.utils import bboxes_iou
 from yolox.utils.boxes import min_rect
 from ..losses import PolyIOUloss,WingLoss,FocalLoss
 
-from ..network_blocks import BaseConv, DWConv
+from ..network_blocks import BaseConv, DWConv,RepDWConv
 
 
 class YOLOXHead(nn.Module):
@@ -34,6 +34,7 @@ class YOLOXHead(nn.Module):
         in_channels=[256, 512, 1024],
         act="silu",
         depthwise=False,
+        ksize_head=5
     ):
         """
         Args:
@@ -78,7 +79,7 @@ class YOLOXHead(nn.Module):
                             DWConv(
                                 in_channels=int(256 * width),
                                 out_channels=int(256 * width) * 2,
-                                ksize=5,
+                                ksize=ksize_head,
                                 stride=1,
                                 pconv_groups=2,
                                 act=act,
@@ -86,7 +87,7 @@ class YOLOXHead(nn.Module):
                             DWConv(
                                 in_channels=int(256 * width) * 2,
                                 out_channels=int(256 * width) * 2,
-                                ksize=5,
+                                ksize=ksize_head,
                                 stride=1,
                                 pconv_groups=2,
                                 act=act,
@@ -99,9 +100,9 @@ class YOLOXHead(nn.Module):
                     nn.Sequential(
                         *[
                             BaseConv(
-                                in_channels=int(256 * width) * 2,
+                                in_channels=int(256 * width),
                                 out_channels=int(256 * width) * 2,
-                                ksize=5,
+                                ksize=ksize_head,
                                 stride=1,
                                 groups=2,
                                 act=act,
@@ -109,7 +110,7 @@ class YOLOXHead(nn.Module):
                             BaseConv(
                                 in_channels=int(256 * width) * 2,
                                 out_channels=int(256 * width) * 2,
-                                ksize=5,
+                                ksize=ksize_head,
                                 stride=1,
                                 groups=2,
                                 act=act,

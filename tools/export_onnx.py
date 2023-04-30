@@ -88,7 +88,7 @@ def main():
     logger.info("loading checkpoint done.")
     model = fuse_model(model)
     dummy_input = torch.randn(args.batch_size, 3, exp.test_size[0], exp.test_size[1])
-    torch.onnx._export(
+    torch.onnx.export(
         model,
         dummy_input,
         args.output_name,
@@ -110,8 +110,7 @@ def main():
         # use onnxsimplify to reduce reduent model.
         onnx_model = onnx.load(args.output_name)
         model_simp, check = simplify(onnx_model,
-                                     dynamic_input_shape=args.dynamic,
-                                     input_shapes=input_shapes)
+                                     overwrite_input_shapes=input_shapes if not args.dynamic else None)
         assert check, "Simplified ONNX model could not be validated"
         onnx.save(model_simp, args.output_name)
         logger.info("generated simplified onnx model named {}".format(args.output_name))

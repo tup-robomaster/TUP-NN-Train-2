@@ -19,8 +19,14 @@ class Exp(BaseExp):
         self.use_distillation  = False
         self.teacher_pth = "/home/rangeronmars/AI/TUP-NN-Train/teacher/teacher.pth"
         # ---------------- model config ---------------- #
-        self.num_classes = 9
-        self.num_colors = 4
+        # self.num_classes = 1
+        # self.num_colors = 2
+        # self.num_apexes = 4
+        # self.num_classes = 2
+        # self.num_colors = 2
+        # self.num_apexes = 5
+        self.num_classes = 8
+        self.num_colors = 8
         self.num_apexes = 4
         self.depth = 1.00
         self.width = 1.00
@@ -36,7 +42,7 @@ class Exp(BaseExp):
         # self.multiscale_range = 5
         # You can uncomment this line to specify a multiscale range
         self.random_size = (10, 18)
-        self.data_dir = "TUP-Armor-Dataset"
+        self.data_dir = "/home/ninefish/datasets/Armor_final_Dataset"
         self.train_ann = "instances_train2017.json"
         self.val_ann = "instances_val2017.json"
 

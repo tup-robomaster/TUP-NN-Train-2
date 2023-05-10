@@ -28,6 +28,9 @@ class Exp(BaseExp):
         self.num_classes = 8
         self.num_colors = 8
         self.num_apexes = 4
+        # self.num_classes = 1
+        # self.num_colors = 1
+        # self.num_apexes = 4
         self.depth = 1.00
         self.width = 1.00
         self.act = 'relu'
@@ -36,6 +39,7 @@ class Exp(BaseExp):
         # set worker to 4 for shorter dataloader init time
         self.data_num_workers = 8
         self.input_size = (416,416)  # (height, width)
+        # self.input_size = (960,960)  # (height, width)
         # Actual multiscale ranges: [640-5*32, 640+5*32].
         # To disable multiscale training, set the
         # self.multiscale_range to 0.
@@ -68,8 +72,8 @@ class Exp(BaseExp):
 
         # --------------  training config --------------------- #
         #For Using SGD+Momentum
-        self.warmup_epochs = 20
-        self.max_epoch = 200
+        self.warmup_epochs = 40
+        self.max_epoch = 500
         self.warmup_lr = 0
         self.basic_lr_per_img = 0.001
         self.scheduler = "yoloxwarmcos"
@@ -90,6 +94,7 @@ class Exp(BaseExp):
 
         # -----------------  testing config ------------------ #
         self.test_size = (416,416)
+        # self.test_size = (960,960)
         self.test_conf = 0.25
         self.nmsthre = 0.3
 

@@ -143,7 +143,11 @@ class COCODataset(Dataset):
         annotations = self.coco.loadAnns(anno_ids)
         objs = []
         for obj in annotations:
-            obj["segmentation"] = np.ravel(obj["segmentation"])
+            input_keypoints = []
+            for keypoint in obj["keypoints"]:
+                if keypoint != 2.0:
+                    input_keypoints.append(keypoint)
+            obj["keypoints"] = np.ravel(input_keypoints)
             objs.append(obj)
 
         num_objs = len(objs)
@@ -156,7 +160,7 @@ class COCODataset(Dataset):
         # #     res[ix, 4] = cls
         for ix, obj in enumerate(objs):
             cls = self.class_ids.index(obj["category_id"])
-            res[ix, :self.num_apexes * 2] = np.ravel(obj["segmentation"])   #Apex
+            res[ix, :self.num_apexes * 2] = np.ravel(obj["keypoints"])   #Apex
             res[ix, self.num_apexes * 2] = cls                              #Class
         #Normalize label 
         r = min(self.img_size[0] / height, self.img_size[1] / width)

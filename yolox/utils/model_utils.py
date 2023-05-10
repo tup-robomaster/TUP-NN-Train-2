@@ -89,11 +89,11 @@ def fuse_model(model: nn.Module) -> nn.Module:
     from yolox.models.network_blocks import BaseConv, RepBaseConv
 
     for m in model.modules():
-        if type(m) is BaseConv and hasattr(m, "bn"):
-            m.conv = fuse_conv_and_bn(m.conv, m.bn)  # update conv
-            delattr(m, "bn")  # remove batchnorm
-            m.forward = m.fuseforward  # update forward
-        elif type(m) is RepBaseConv:
+        # if type(m) is BaseConv and hasattr(m, "bn"):
+        #     m.conv = fuse_conv_and_bn(m.conv, m.bn)  # update conv
+        #     delattr(m, "bn")  # remove batchnorm
+        #     m.forward = m.fuseforward  # update forward
+        if type(m) is RepBaseConv:
             m.switch_to_deploy()
     return model
 

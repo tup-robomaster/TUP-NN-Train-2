@@ -44,6 +44,13 @@ def make_parser():
         type=str,
         help="expriment description file",
     )
+    parser.add_argument(
+        "--fp16",
+        dest="fp16",
+        default=False,
+        action="store_true",
+        help="Adopting mix precision evaluating.",
+    )
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
     parser.add_argument("-n", "--name", type=str, default=None, help="model name")
     parser.add_argument("-c", "--ckpt", default=None, type=str, help="ckpt path")
@@ -87,6 +94,9 @@ def main():
 
     logger.info("loading checkpoint done.")
     model = fuse_model(model)
+    if args.fp16:
+        model.cuda()
+        model.half()  # to FP16
     dummy_input = torch.randn(args.batch_size, 3, exp.test_size[0], exp.test_size[1])
     torch.onnx.export(
         model,

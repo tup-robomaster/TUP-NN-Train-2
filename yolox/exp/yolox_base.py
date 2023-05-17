@@ -22,12 +22,12 @@ class Exp(BaseExp):
         # self.num_classes = 1
         # self.num_colors = 2
         # self.num_apexes = 4
-        # self.num_classes = 2
-        # self.num_colors = 2
-        # self.num_apexes = 5
-        self.num_classes = 8
-        self.num_colors = 8
-        self.num_apexes = 4
+        self.num_classes = 2
+        self.num_colors = 2
+        self.num_apexes = 5
+        # self.num_classes = 8
+        # self.num_colors = 8
+        # self.num_apexes = 4
         # self.num_classes = 1
         # self.num_colors = 1
         # self.num_apexes = 4
@@ -46,7 +46,7 @@ class Exp(BaseExp):
         # self.multiscale_range = 5
         # You can uncomment this line to specify a multiscale range
         self.random_size = (10, 18)
-        self.data_dir = "/home/ninefish/datasets/Armor_final_Dataset"
+        self.data_dir = "/home/ninefish/datasets/buff"
         self.train_ann = "instances_train2017.json"
         self.val_ann = "instances_val2017.json"
 

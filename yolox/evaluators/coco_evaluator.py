@@ -93,6 +93,7 @@ class COCOEvaluator:
         testdev=False,
         per_class_AP: bool = False,
         per_class_AR: bool = False,
+        sigmas=None
     ):
         """
         Args:
@@ -115,6 +116,7 @@ class COCOEvaluator:
         self.testdev = testdev
         self.per_class_AP = per_class_AP
         self.per_class_AR = per_class_AR
+        self.sigmas = sigmas
 
     def evaluate(
         self,
@@ -343,6 +345,7 @@ class COCOEvaluator:
             cocoEval = COCOeval(cocoGt, cocoDt, annType[2])
             cocoEval.evaluate()
             cocoEval.accumulate()
+            cocoEval.setSigmas(self.sigmas)
             redirect_string = io.StringIO()
             with contextlib.redirect_stdout(redirect_string):
                 cocoEval.summarize()

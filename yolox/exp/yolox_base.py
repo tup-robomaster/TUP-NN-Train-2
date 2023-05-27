@@ -19,12 +19,12 @@ class Exp(BaseExp):
         self.use_distillation  = False
         self.teacher_pth = "/home/rangeronmars/AI/TUP-NN-Train/teacher/teacher.pth"
         # ---------------- model config ---------------- #
-        # self.num_classes = 1
-        # self.num_colors = 2
-        # self.num_apexes = 4
-        self.num_classes = 2
+        self.num_classes = 1
         self.num_colors = 2
-        self.num_apexes = 5
+        self.num_apexes = 4
+        # self.num_classes = 2
+        # self.num_colors = 2
+        # self.num_apexes = 5
         # self.num_classes = 8
         # self.num_colors = 8
         # self.num_apexes = 4
@@ -38,7 +38,7 @@ class Exp(BaseExp):
         # ---------------- dataloader config ---------------- #
         # set worker to 4 for shorter dataloader init time
         self.data_num_workers = 8
-        self.input_size = (416,416)  # (height, width)
+        self.input_size = (640,640)  # (height, width)
         # self.input_size = (960,960)  # (height, width)
         # Actual multiscale ranges: [640-5*32, 640+5*32].
         # To disable multiscale training, set the
@@ -46,7 +46,7 @@ class Exp(BaseExp):
         # self.multiscale_range = 5
         # You can uncomment this line to specify a multiscale range
         self.random_size = (10, 18)
-        self.data_dir = "/home/ninefish/datasets/buff"
+        self.data_dir = "/home/ninefish/datasets/stone_two"
         self.train_ann = "instances_train2017.json"
         self.val_ann = "instances_val2017.json"
 
@@ -89,11 +89,13 @@ class Exp(BaseExp):
         self.eval_interval = 5
         self.per_class_AP = True
         self.per_class_AR = True
+        # self.sigmas = [0.4, 0.15, 0.15, 0.15, 0.15]
+        self.sigmas = [0.25, 0.25, 0.25, 0.25]
         self.save_history_ckpt = False
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
 
         # -----------------  testing config ------------------ #
-        self.test_size = (416,416)
+        self.test_size = (640,640)
         # self.test_size = (960,960)
         self.test_conf = 0.25
         self.nmsthre = 0.3
@@ -325,7 +327,8 @@ class Exp(BaseExp):
             num_colors=self.num_colors,
             testdev=testdev,
             per_class_AP=self.per_class_AP,
-            per_class_AR=self.per_class_AR
+            per_class_AR=self.per_class_AR,
+            sigmas=self.sigmas
         )
         return evaluator
 

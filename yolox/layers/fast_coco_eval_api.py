@@ -23,6 +23,11 @@ class COCOeval_opt(COCOeval):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.module = FastCOCOEvalOp().load()
+        self.sigmas = None
+
+    def setSigmas(self, sigmas=None):
+        self.sigmas = sigmas
+
 #Edited computeOks
     def computeOks(self, imgId, catId):
         p = self.params
@@ -47,7 +52,9 @@ class COCOeval_opt(COCOeval):
             bb = gt['bbox']
             x0 = bb[0] - bb[2]; x1 = bb[0] + bb[2] * 2
             y0 = bb[1] - bb[3]; y1 = bb[1] + bb[3] * 2
-            sigmas = np.ones((len(xg),1),dtype=np.float32) / float(len(xg))
+
+            sigmas = np.ones((len(xg),1),dtype=np.float32) / float(len(xg)) if self.sigmas == None or len(self.sigmas) != g.size() / 3 else np.array(self.sigmas)
+            
             vars = (sigmas * 2)**2
             k = len(sigmas)
             

@@ -136,3 +136,4 @@ YOLOX_outputs/
 best.onnx
 demo/TensorRT/cpp/model_trt.engine
 yolox.onnx
+TUP_VENV/
